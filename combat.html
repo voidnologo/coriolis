@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coriolis Combat Reference</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Mermaid.js for flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0a0d12;
+            --bg-secondary: #12171f;
+            --bg-card: #1a2030;
+            --bg-card-hover: #222940;
+            --gold-primary: #c9a227;
+            --gold-light: #e8c547;
+            --gold-dark: #8b7119;
+            --text-primary: #e8e6e3;
+            --text-secondary: #a8a5a0;
+            --text-muted: #6b6965;
+            --accent-blue: #4a7c9b;
+            --accent-red: #9b4a4a;
+            --accent-green: #4a9b6b;
+            --border-color: #2a3545;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Decorative background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(201, 162, 39, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(74, 124, 155, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(201, 162, 39, 0.01) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Stars background effect */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -2;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.3), transparent);
+            background-size: 200px 200px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        header::before {
+            top: 0;
+            width: 60%;
+        }
+
+        header::after {
+            bottom: 0;
+            width: 80%;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .header-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--gold-primary);
+            filter: drop-shadow(0 0 10px rgba(201, 162, 39, 0.3));
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+        }
+
+        .subtitle {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--gold-primary);
+            background: rgba(201, 162, 39, 0.1);
+        }
+
+        /* Section Styles */
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-dark));
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2 .icon {
+            width: 28px;
+            height: 28px;
+            fill: var(--gold-primary);
+            opacity: 0.8;
+        }
+
+        h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            margin: 1rem 0 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: linear-gradient(180deg, var(--bg-secondary), var(--bg-card));
+        }
+
+        th {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gold-dark);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(201, 162, 39, 0.05);
+        }
+
+        /* Highlight cells */
+        .highlight {
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .modifier-positive {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .modifier-negative {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .modifier-neutral {
+            color: var(--text-secondary);
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: rgba(74, 124, 155, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .info-box.warning {
+            background: rgba(155, 74, 74, 0.1);
+            border-color: var(--accent-red);
+        }
+
+        .info-box.success {
+            background: rgba(74, 155, 107, 0.1);
+            border-color: var(--accent-green);
+        }
+
+        .info-box.gold {
+            background: rgba(201, 162, 39, 0.1);
+            border-color: var(--gold-primary);
+        }
+
+        .info-box strong {
+            color: var(--gold-light);
+        }
+
+        /* Code/Formula boxes */
+        .formula-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--gold-light);
+        }
+
+        .formula-box .label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .card h4 {
+            margin-top: 0;
+        }
+
+        /* AP Cost badges */
+        .ap-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .ap-badge.slow {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .ap-badge.normal {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .ap-badge.fast {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .ap-badge.free {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Flowchart Styles */
+        .flowchart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .flowchart-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--gold-primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Mermaid overrides */
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Custom flowchart with CSS */
+        .flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-node {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .flow-node:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(201, 162, 39, 0.2);
+        }
+
+        .flow-node.start {
+            background: linear-gradient(135deg, var(--accent-blue), #3a6c8b);
+            border-color: var(--accent-blue);
+            color: white;
+            border-radius: 25px;
+        }
+
+        .flow-node.end {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            border-color: var(--gold-primary);
+            color: var(--bg-primary);
+            border-radius: 25px;
+        }
+
+        .flow-node.decision {
+            background: var(--bg-card);
+            border-color: var(--gold-primary);
+            transform: rotate(0deg);
+            position: relative;
+        }
+
+        .flow-node.decision::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid var(--gold-dark);
+            border-radius: 8px;
+            opacity: 0.5;
+        }
+
+        .flow-node.action {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
+            border-color: var(--accent-green);
+        }
+
+        .flow-node.result {
+            background: rgba(74, 155, 107, 0.2);
+            border-color: var(--accent-green);
+        }
+
+        .flow-node.negative {
+            background: rgba(155, 74, 74, 0.2);
+            border-color: var(--accent-red);
+        }
+
+        .flow-arrow {
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .flow-arrow.down {
+            transform: rotate(90deg);
+        }
+
+        .flow-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .flow-branch {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .flow-branch::before {
+            content: '';
+            position: absolute;
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        /* Lists */
+        ul {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+        }
+
+        li {
+            margin: 0.35rem 0;
+            color: var(--text-secondary);
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .stars, body::before {
+                display: none;
+            }
+
+            nav {
+                display: none;
+            }
+
+            section {
+                break-inside: avoid;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+
+            section::before {
+                background: #333;
+            }
+
+            h1, h2, .gold-primary {
+                color: #333 !important;
+            }
+
+            .info-box {
+                border: 1px solid #999;
+                background: #f5f5f5;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            .flowchart-container {
+                background: #f9f9f9;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 0.15em;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 1.25rem;
+            }
+
+            nav ul {
+                gap: 0.25rem;
+            }
+
+            nav a {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Animated accent line */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            margin: 2rem 0;
+        }
+
+        /* Dice icon styling */
+        .dice-formula {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .dice {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--gold-primary);
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .plus {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <div class="container">
+        <header>
+            <div class="header-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <path d="M50 5 L53 45 L50 50 L47 45 Z" fill="currentColor"/>
+                    <path d="M95 50 L55 53 L50 50 L55 47 Z" fill="currentColor"/>
+                    <path d="M50 95 L47 55 L50 50 L53 55 Z" fill="currentColor"/>
+                    <path d="M5 50 L45 47 L50 50 L45 53 Z" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="8" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="4" fill="#0a0d12"/>
+                </svg>
+            </div>
+            <h1>Combat Reference</h1>
+            <p class="subtitle">Coriolis - The Third Horizon</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#initiative">Initiative</a></li>
+                <li><a href="#actions">Actions</a></li>
+                <li><a href="#melee">Melee Combat</a></li>
+                <li><a href="#ranged">Ranged Combat</a></li>
+                <li><a href="#special">Special Actions</a></li>
+                <li><a href="#damage">Damage</a></li>
+                <li><a href="#flowcharts">Flowcharts</a></li>
+            </ul>
+        </nav>
+
+        <!-- INITIATIVE SECTION -->
+        <section id="initiative">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Initiative & Turn Order
+            </h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Starting Combat</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Step</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">1</td>
+                                    <td>All combatants roll <strong>1D6</strong> for initiative</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">2</td>
+                                    <td>Higher scores act first (ties: roll off)</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">3</td>
+                                    <td>Keep dice visible - score persists all combat</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">4</td>
+                                    <td>When all have acted, new turn begins</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box gold">
+                        <strong>One combat turn = approximately 10-20 seconds</strong>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Initiative Modifiers</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th>Modifier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Surprise attack</td>
+                                    <td class="modifier-positive">+2 (first turn only)</td>
+                                </tr>
+                                <tr>
+                                    <td>Weapon initiative bonus</td>
+                                    <td class="modifier-positive">+X (must attack with weapon)</td>
+                                </tr>
+                                <tr>
+                                    <td>Bonus effect spent</td>
+                                    <td class="modifier-positive">+2 per six</td>
+                                </tr>
+                                <tr>
+                                    <td>Lower voluntarily</td>
+                                    <td class="modifier-negative">Any (permanent)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIONS SECTION -->
+        <section id="actions">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                Action Points
+            </h2>
+
+            <div class="formula-box">
+                <div class="label">Each Turn</div>
+                You receive <strong>3 Action Points (AP)</strong> to spend. AP refresh at the start of each turn.
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action Type</th>
+                            <th>AP Cost</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="ap-badge slow">SLOW</span></td>
+                            <td class="highlight">3 AP</td>
+                            <td>Aimed shot, Full auto fire, First aid, Activate mystical power, Tinker with gadget</td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge normal">NORMAL</span></td>
+                            <td class="highlight">2 AP</td>
+                            <td>Melee attack, Normal ranged shot, Reload weapon, Ram with vehicle</td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge fast">FAST</span></td>
+                            <td class="highlight">1 AP</td>
+                            <td>Sprint (10m), Take cover, Draw weapon, Parry, Quick shot, Go into overwatch, Hit the ground, Get up</td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge free">FREE</span></td>
+                            <td class="highlight">0 AP</td>
+                            <td>Roll armor, Defend in opposed roll, Quick shout to ally</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Common Action Combinations</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Option A</h4>
+                    <p><span class="ap-badge fast">FAST</span> + <span class="ap-badge fast">FAST</span> + <span class="ap-badge fast">FAST</span></p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Three quick actions</p>
+                </div>
+                <div class="card">
+                    <h4>Option B</h4>
+                    <p><span class="ap-badge normal">NORMAL</span> + <span class="ap-badge fast">FAST</span></p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Standard attack + movement</p>
+                </div>
+                <div class="card">
+                    <h4>Option C</h4>
+                    <p><span class="ap-badge slow">SLOW</span></p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">One careful action</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MELEE COMBAT SECTION -->
+        <section id="melee">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M6.92 5H5l9 9 1-.94L6.92 5zm11.7-.35l-.71-.71a.996.996 0 0 0-1.41 0L14 6.44l1.83 1.83 2.5-2.5a.996.996 0 0 0 0-1.41l-.71-.71zM6.92 19.07l-1.41-1.41L3.09 20.07l1.41 1.41 2.42-2.41zm12.01-8.14l-1.41-1.41-8.14 8.14 1.41 1.41 8.14-8.14zM3.5 14.59l2.5-2.5 1.83 1.83-2.5 2.5L3.5 14.59z"/></svg>
+                Melee Combat
+            </h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Making an Attack</h3>
+                    <p><span class="ap-badge normal">NORMAL ACTION - 2 AP</span></p>
+
+                    <div class="formula-box">
+                        <div class="label">Roll</div>
+                        <div class="dice-formula">
+                            <span>MELEE COMBAT =</span>
+                            <span class="dice">ATR</span>
+                            <span class="plus">+</span>
+                            <span class="dice">SKL</span>
+                            <span class="plus">+</span>
+                            <span class="dice">WPN</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
+                            Success = Roll at least one <strong style="color: var(--gold-primary);">6</strong>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Requirement</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Range</td>
+                                    <td>Must be at Close Range (~2m)</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Posture</td>
+                                    <td>Must be standing (get up = 1 AP)</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Weapon</td>
+                                    <td>Add weapon's Gear Bonus to pool</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>Quick Melee Attack</h4>
+                    <p><span class="ap-badge fast">FAST ACTION - 1 AP</span></p>
+                    <ul>
+                        <li><strong class="modifier-negative">-2 modifier</strong> to attack roll</li>
+                        <li>Light weapons or unarmed only</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Defending in Melee</h3>
+                    <p><span class="ap-badge fast">FAST REACTION - 1 AP</span></p>
+
+                    <div class="info-box warning">
+                        <strong>NPCs require GM to spend 1 Darkness Point to defend</strong>
+                    </div>
+
+                    <ol style="margin-left: 1.25rem;">
+                        <li>Declare defense <strong>before</strong> attacker rolls</li>
+                        <li>Both roll MELEE COMBAT simultaneously</li>
+                        <li>Defender spends sixes on effects</li>
+                    </ol>
+
+                    <div class="table-wrapper" style="margin-top: 1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Defense Effect</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Decrease Damage</td>
+                                    <td>Cancel one attacker's six (repeatable)</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Counterattack</td>
+                                    <td>Deal your Weapon Damage to attacker</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Disarm</td>
+                                    <td>Enemy drops weapon (after attack)</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Raise Initiative</td>
+                                    <td>+2 to your initiative</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <strong>Unarmed vs. Weapon:</strong> -2 modifier to defend
+                    </div>
+                </div>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <h3>Melee Bonus Effects (Extra Sixes)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Effect</th>
+                            <th>Cost</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Increase Damage</td>
+                            <td>1 six</td>
+                            <td>+1 damage <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Critical Injury</td>
+                            <td>Crit Rating</td>
+                            <td>Roll D66 on critical injury table; extra sixes = reroll for worse</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Strike Fear</td>
+                            <td>1 six</td>
+                            <td>Target takes 1 stress <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Raise Initiative</td>
+                            <td>1 six</td>
+                            <td>+2 initiative next turn <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Disarm</td>
+                            <td>1 six</td>
+                            <td>Target drops weapon or item</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Grapple</td>
+                            <td>1 six</td>
+                            <td>Pin opponent (see below)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Grappling Rules</h4>
+            <div class="grid-2">
+                <div class="card">
+                    <h4 style="margin-top: 0;">Breaking Free</h4>
+                    <p>Opposed MELEE COMBAT roll</p>
+                    <ul>
+                        <li><strong>Pinned person:</strong> Normal action</li>
+                        <li><strong>Grappler:</strong> Free action</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4 style="margin-top: 0;">Grapple Attacks</h4>
+                    <ul>
+                        <li><strong class="modifier-positive">+2 modifier</strong> to attack</li>
+                        <li>Unarmed damage only</li>
+                        <li>Target <strong>cannot</strong> defend</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- RANGED COMBAT SECTION -->
+        <section id="ranged">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                Ranged Combat
+            </h2>
+
+            <h3>Making an Attack</h3>
+            <p><span class="ap-badge normal">NORMAL ACTION - 2 AP</span></p>
+
+            <div class="formula-box">
+                <div class="label">Roll</div>
+                <div class="dice-formula">
+                    <span>RANGED COMBAT =</span>
+                    <span class="dice">ATR</span>
+                    <span class="plus">+</span>
+                    <span class="dice">SKL</span>
+                    <span class="plus">+</span>
+                    <span class="dice">WPN</span>
+                    <span class="plus">+</span>
+                    <span class="dice">MOD</span>
+                </div>
+                <div style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">
+                    Success = Roll at least one <strong style="color: var(--gold-primary);">6</strong>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h4>Range Modifiers</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Distance</th>
+                                    <th>Range</th>
+                                    <th>Modifier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Close</td>
+                                    <td>~2m</td>
+                                    <td><span class="modifier-negative">-3</span> <em>(in melee)</em> / <span class="modifier-positive">+3</span> <em>(unaware)</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Short</td>
+                                    <td>~20m</td>
+                                    <td class="modifier-neutral">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Long</td>
+                                    <td>~100m</td>
+                                    <td class="modifier-negative">-1</td>
+                                </tr>
+                                <tr>
+                                    <td>Extreme</td>
+                                    <td>~1km</td>
+                                    <td class="modifier-negative">-2</td>
+                                </tr>
+                                <tr>
+                                    <td>Beyond weapon range</td>
+                                    <td>+1 step</td>
+                                    <td class="modifier-negative">-3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <h4>Target Size Modifiers</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Target Size</th>
+                                    <th>Modifier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Prone / Small</td>
+                                    <td class="modifier-negative">-1</td>
+                                </tr>
+                                <tr>
+                                    <td>Normal</td>
+                                    <td class="modifier-neutral">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Large (vehicle)</td>
+                                    <td class="modifier-positive">+1</td>
+                                </tr>
+                                <tr>
+                                    <td>Huge</td>
+                                    <td class="modifier-positive">+2 or more</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <h3>Shot Types</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Shot Type</th>
+                            <th>AP Cost</th>
+                            <th>Modifier</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="ap-badge fast">Quick Shot</span></td>
+                            <td>1 AP</td>
+                            <td class="modifier-negative">-2</td>
+                            <td>Close/Short range only; <strong>3 quick shots = empty clip</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge normal">Normal Shot</span></td>
+                            <td>2 AP</td>
+                            <td class="modifier-neutral">0</td>
+                            <td>Standard ranged attack</td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge slow">Aimed Shot</span></td>
+                            <td>3 AP</td>
+                            <td class="modifier-positive">+2</td>
+                            <td>Cannot use when engaged in melee</td>
+                        </tr>
+                        <tr>
+                            <td><span class="ap-badge slow">Full Auto</span></td>
+                            <td>3 AP</td>
+                            <td class="modifier-negative">-2</td>
+                            <td>See Automatic Fire rules</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Automatic Fire</h4>
+            <div class="card">
+                <ol style="margin-left: 1.25rem;">
+                    <li>Roll attack with <strong class="modifier-negative">-2 modifier</strong></li>
+                    <li>Keep rolling extra dice <strong>one at a time</strong></li>
+                    <li><strong class="modifier-negative">Roll a 1 = clip empty</strong>, must reload</li>
+                    <li>Can split dice between targets (each within Close Range of previous)</li>
+                </ol>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <h3>Ranged Bonus Effects (Extra Sixes)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Effect</th>
+                            <th>Cost</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Increase Damage</td>
+                            <td>1 six</td>
+                            <td>+1 damage <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Critical Injury</td>
+                            <td>Crit Rating</td>
+                            <td>Roll D66 on critical injury table; extra sixes = reroll for worse</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Suppressive Fire</td>
+                            <td>1 six</td>
+                            <td>Target takes 1 stress (+1 if full auto) <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Raise Initiative</td>
+                            <td>1 six</td>
+                            <td>+2 initiative next turn <em>(repeatable)</em></td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Disarm</td>
+                            <td>1 six</td>
+                            <td>Target drops weapon or item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box warning">
+                <strong>No Active Defense:</strong> You cannot actively defend against ranged attacks. Use <strong>COVER</strong> instead!
+            </div>
+        </section>
+
+        <!-- SPECIAL ACTIONS SECTION -->
+        <section id="special">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                Special Actions & Tactics
+            </h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Cover</h3>
+                    <p><span class="ap-badge fast">FAST ACTION - 1 AP</span> to take cover</p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Cover Type</th>
+                                    <th>Armor Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Divan</td><td class="highlight">2</td></tr>
+                                <tr><td>Table</td><td class="highlight">3</td></tr>
+                                <tr><td>Door</td><td class="highlight">4</td></tr>
+                                <tr><td>Inner Wall</td><td class="highlight">5</td></tr>
+                                <tr><td>Outer Wall</td><td class="highlight">6</td></tr>
+                                <tr><td>Brick Wall</td><td class="highlight">7</td></tr>
+                                <tr><td>Foxhole</td><td class="highlight">8</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box success">
+                        <strong>Cover + Armor stack!</strong> Add all dice together.
+                    </div>
+
+                    <h4>Fire Support & Prone</h4>
+                    <ul>
+                        <li><strong class="modifier-positive">+1</strong> to ranged attacks when behind cover (not quick shots)</li>
+                        <li><strong>Prone:</strong> Enemies get <strong class="modifier-negative">-1</strong> to hit you</li>
+                        <li>You get <strong class="modifier-positive">+1</strong> fire support even without cover when prone</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Attack of Opportunity</h3>
+                    <p><span class="ap-badge fast">FAST REACTION - 1 AP</span></p>
+
+                    <div class="card">
+                        <h4 style="margin-top: 0;">Triggers When Enemy:</h4>
+                        <ul>
+                            <li>Moves <strong>away</strong> from melee engagement with you</li>
+                            <li><strong>Passes within</strong> Close Range during movement</li>
+                        </ul>
+                    </div>
+
+                    <div class="table-wrapper" style="margin-top: 1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bonus</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="modifier-positive">+2 modifier</td>
+                                    <td>To your attack roll</td>
+                                </tr>
+                                <tr>
+                                    <td>Fast action</td>
+                                    <td>Costs 1 AP</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 style="margin-top: 1.5rem;">Overwatch</h3>
+                    <p><span class="ap-badge fast">FAST ACTION - 1 AP</span></p>
+
+                    <ol style="margin-left: 1.25rem;">
+                        <li>Declare overwatch and aim direction <strong>(90° arc)</strong></li>
+                        <li>Until next turn, fire <strong>normal shot (2 AP)</strong> at any time</li>
+                        <li>Fire <strong>interrupts</strong> enemy actions (even after declared)</li>
+                    </ol>
+
+                    <div class="info-box warning" style="margin-top: 1rem;">
+                        <strong>Overwatch breaks if you:</strong>
+                        <ul style="margin-bottom: 0;">
+                            <li>Perform any other action</li>
+                            <li>Become engaged in melee</li>
+                            <li>Take damage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <h3>Reactions Summary</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reaction</th>
+                            <th>AP Cost</th>
+                            <th>When Triggered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Defend (melee)</td>
+                            <td>1 AP</td>
+                            <td>When attacked in melee combat</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Attack of Opportunity</td>
+                            <td>1 AP</td>
+                            <td>Enemy leaves or passes Close Range</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Overwatch Fire</td>
+                            <td>2 AP</td>
+                            <td>Enemy acts within your 90° arc</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box gold">
+                <strong>Important:</strong> Reactions use AP from your current or upcoming turn. Save AP if you want to react later!
+            </div>
+        </section>
+
+        <!-- DAMAGE SECTION -->
+        <section id="damage">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Damage & Armor
+            </h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Taking Damage</h3>
+                    <ol style="margin-left: 1.25rem;">
+                        <li>Attack hits (attacker rolled at least one 6)</li>
+                        <li>Roll <strong>Armor Rating</strong> dice - each <strong class="highlight">6</strong> reduces damage by 1</li>
+                        <li>Apply remaining damage to Hit Points</li>
+                    </ol>
+
+                    <h4>Broken (0 HP)</h4>
+                    <ul>
+                        <li>Cannot act or test skills</li>
+                        <li>Can still receive critical injuries</li>
+                        <li><strong>Recovery:</strong> First aid (MEDICURGY, slow action) or wait D6 hours</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Critical Injuries</h3>
+                    <div class="card">
+                        <ol style="margin-left: 1.25rem;">
+                            <li>Spend extra sixes equal to weapon's <strong>Crit Rating</strong></li>
+                            <li>Roll <strong>D66</strong> on critical injury table</li>
+                            <li>Spend more sixes to <strong>reroll</strong> for worse injury</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box warning" style="margin-top: 1rem;">
+                        <strong>Fatal Injuries:</strong> Require first aid within time limit or you die!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLOWCHARTS SECTION -->
+        <section id="flowcharts">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z"/></svg>
+                Combat Flowcharts
+            </h2>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Your Turn Structure</div>
+                <div class="flow">
+                    <div class="flow-node start">START OF TURN</div>
+                    <div class="flow-arrow down">↓</div>
+                    <div class="flow-node">Receive 3 AP</div>
+                    <div class="flow-arrow down">↓</div>
+                    <div class="flow-node decision">Choose Actions<br><small>(Slow / Normal / Fast)</small></div>
+                    <div class="flow-arrow down">↓</div>
+                    <div class="flow-node action">Perform Actions</div>
+                    <div class="flow-arrow down">↓</div>
+                    <div class="flow-node decision">Save AP for Reactions?</div>
+                    <div class="flow-arrow down">↓</div>
+                    <div class="flow-node end">END OF TURN</div>
+                </div>
+            </div>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Melee Attack Resolution</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[Declare Attack<br/>2 AP] --> B{Target Defends?}
+                        B -->|No| C[Roll MELEE COMBAT]
+                        B -->|Yes| D[Both Roll Simultaneously]
+                        C --> E{Any 6s?}
+                        D --> F{Compare Results}
+                        E -->|Yes| G[Deal Weapon Damage]
+                        E -->|No| H[Attack Misses]
+                        F --> I[Apply Defense Effects]
+                        I --> J[Resolve Remaining Damage]
+                        G --> K{Extra 6s?}
+                        J --> K
+                        K -->|Yes| L[Apply Bonus Effects]
+                        K -->|No| M[Attack Complete]
+                        L --> M
+                        H --> M
+
+                        style A fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style B fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style C fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style D fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style E fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style F fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style G fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style H fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style I fill:#1a2030,stroke:#4a7c9b,color:#e8e6e3
+                        style J fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style K fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style L fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style M fill:#c9a227,stroke:#8b7119,color:#0a0d12
+                </div>
+            </div>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Ranged Attack Resolution</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[Declare Attack] --> B[Apply Modifiers<br/>Range, Size, Shot Type]
+                        B --> C[Roll RANGED COMBAT]
+                        C --> D{Any 6s?}
+                        D -->|Yes| E[Deal Weapon Damage]
+                        D -->|No| F[Attack Misses]
+                        E --> G[Target Rolls Armor<br/>+ Cover if applicable]
+                        G --> H[Apply Remaining Damage]
+                        H --> I{Extra 6s?}
+                        I -->|Yes| J[Apply Bonus Effects]
+                        I -->|No| K[Attack Complete]
+                        J --> K
+                        F --> K
+
+                        style A fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style B fill:#1a2030,stroke:#4a7c9b,color:#e8e6e3
+                        style C fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style D fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style E fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style F fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style G fill:#1a2030,stroke:#4a7c9b,color:#e8e6e3
+                        style H fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style I fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style J fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style K fill:#c9a227,stroke:#8b7119,color:#0a0d12
+                </div>
+            </div>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Damage Resolution</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[Attack Hits] --> B[Determine Base Damage<br/>Weapon Damage + Extra 6s]
+                        B --> C[Defender Rolls Armor<br/>+ Cover dice]
+                        C --> D{Any 6s<br/>on Armor?}
+                        D -->|Yes| E[Reduce Damage<br/>-1 per 6]
+                        D -->|No| F[Full Damage Applied]
+                        E --> G{Damage<br/>Remaining?}
+                        G -->|Yes| F
+                        G -->|No| H[Attack Negated!]
+                        F --> I[Subtract from HP]
+                        I --> J{HP = 0?}
+                        J -->|Yes| K[BROKEN!<br/>Cannot act]
+                        J -->|No| L[Continue Fighting]
+                        K --> M{Critical Injury<br/>Inflicted?}
+                        M -->|Yes| N[Roll D66<br/>Apply Effects]
+                        M -->|No| O[Await First Aid<br/>or D6 Hours]
+
+                        style A fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style B fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style C fill:#1a2030,stroke:#4a7c9b,color:#e8e6e3
+                        style D fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style E fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style F fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style G fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style H fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style I fill:#1a2030,stroke:#9b4a4a,color:#e8e6e3
+                        style J fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style K fill:#9b4a4a,stroke:#7a3939,color:#e8e6e3
+                        style L fill:#1a2030,stroke:#4a9b6b,color:#e8e6e3
+                        style M fill:#1a2030,stroke:#c9a227,color:#e8e6e3
+                        style N fill:#9b4a4a,stroke:#7a3939,color:#e8e6e3
+                        style O fill:#1a2030,stroke:#4a7c9b,color:#e8e6e3
+                </div>
+            </div>
+        </section>
+
+        <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem;">
+            <div class="shimmer-line" style="margin-bottom: 2rem;"></div>
+            <p><em>Coriolis: The Third Horizon</em> by Free League Publishing</p>
+            <p style="margin-top: 0.5rem;">Combat Reference Sheet</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Mermaid with dark theme
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#12171f',
+                primaryColor: '#1a2030',
+                primaryTextColor: '#e8e6e3',
+                primaryBorderColor: '#c9a227',
+                lineColor: '#c9a227',
+                secondaryColor: '#1a2030',
+                tertiaryColor: '#1a2030',
+                fontFamily: 'Raleway, sans-serif',
+                fontSize: '14px'
+            },
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 15,
+                nodeSpacing: 50,
+                rankSpacing: 50
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in nav
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.color = '';
+                link.style.background = '';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.color = '#c9a227';
+                    link.style.background = 'rgba(201, 162, 39, 0.1)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

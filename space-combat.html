@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coriolis Space Combat Reference</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Mermaid.js for flowcharts -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #080b10;
+            --bg-secondary: #0f1318;
+            --bg-card: #151a22;
+            --bg-card-hover: #1c2230;
+            --gold-primary: #c9a227;
+            --gold-light: #e8c547;
+            --gold-dark: #8b7119;
+            --text-primary: #e8e6e3;
+            --text-secondary: #a8a5a0;
+            --text-muted: #6b6965;
+            --accent-blue: #4a7c9b;
+            --accent-cyan: #47a8a8;
+            --accent-red: #9b4a4a;
+            --accent-green: #4a9b6b;
+            --accent-purple: #7a4a9b;
+            --accent-orange: #9b6a4a;
+            --border-color: #252d3a;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Deep space background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 10% 20%, rgba(74, 124, 155, 0.05) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 80%, rgba(122, 74, 155, 0.04) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 50%, rgba(201, 162, 39, 0.02) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Enhanced stars background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -2;
+            background-image:
+                radial-gradient(1px 1px at 10px 20px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 50px 60px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 100px 40px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 150px 90px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 200px 150px, rgba(201,162,39,0.4), transparent),
+                radial-gradient(1px 1px at 250px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 300px 120px, rgba(74,124,155,0.5), transparent),
+                radial-gradient(1px 1px at 350px 80px, rgba(255,255,255,0.2), transparent);
+            background-size: 400px 200px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--gold-primary), var(--accent-cyan), transparent);
+        }
+
+        header::before {
+            top: 0;
+            width: 60%;
+        }
+
+        header::after {
+            bottom: 0;
+            width: 80%;
+        }
+
+        .header-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .header-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--gold-primary);
+            filter: drop-shadow(0 0 15px rgba(201, 162, 39, 0.4));
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 40px rgba(201, 162, 39, 0.3);
+        }
+
+        .subtitle {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-cyan);
+            background: rgba(71, 168, 168, 0.1);
+        }
+
+        /* Section Styles */
+        section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--gold-primary), var(--accent-cyan));
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2 .icon {
+            width: 26px;
+            height: 26px;
+            fill: var(--gold-primary);
+            opacity: 0.8;
+        }
+
+        h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            margin: 1rem 0 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        thead {
+            background: linear-gradient(180deg, var(--bg-secondary), var(--bg-card));
+        }
+
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--gold-dark);
+        }
+
+        td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(71, 168, 168, 0.03);
+        }
+
+        .highlight {
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .modifier-positive {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .modifier-negative {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .modifier-neutral {
+            color: var(--text-secondary);
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: rgba(74, 124, 155, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+
+        .info-box.warning {
+            background: rgba(155, 74, 74, 0.1);
+            border-color: var(--accent-red);
+        }
+
+        .info-box.success {
+            background: rgba(74, 155, 107, 0.1);
+            border-color: var(--accent-green);
+        }
+
+        .info-box.gold {
+            background: rgba(201, 162, 39, 0.1);
+            border-color: var(--gold-primary);
+        }
+
+        .info-box.cyan {
+            background: rgba(71, 168, 168, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        .info-box strong {
+            color: var(--gold-light);
+        }
+
+        /* Crew position colors */
+        .crew-captain { color: #e8c547; }
+        .crew-engineer { color: #f09040; }
+        .crew-pilot { color: #47a8a8; }
+        .crew-sensor { color: #9b7ae8; }
+        .crew-gunner { color: #e85050; }
+
+        /* Phase badges */
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.3rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .phase-badge.phase-1 { border-color: #e8c547; color: #e8c547; }
+        .phase-badge.phase-2 { border-color: #f09040; color: #f09040; }
+        .phase-badge.phase-3 { border-color: #47a8a8; color: #47a8a8; }
+        .phase-badge.phase-4 { border-color: #9b7ae8; color: #9b7ae8; }
+        .phase-badge.phase-5 { border-color: #e85050; color: #e85050; }
+
+        .phase-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .phase-badge.phase-1 .phase-num { background: #e8c547; color: var(--bg-primary); }
+        .phase-badge.phase-2 .phase-num { background: #f09040; color: var(--bg-primary); }
+        .phase-badge.phase-3 .phase-num { background: #47a8a8; color: var(--bg-primary); }
+        .phase-badge.phase-4 .phase-num { background: #9b7ae8; color: var(--bg-primary); }
+        .phase-badge.phase-5 .phase-num { background: #e85050; color: var(--bg-primary); }
+
+        /* EP Cost badge */
+        .ep-cost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(71, 168, 168, 0.15);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 4px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .ep-cost.variable {
+            background: rgba(201, 162, 39, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .ep-cost.free {
+            background: rgba(74, 155, 107, 0.15);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* Formula boxes */
+        .formula-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--gold-light);
+        }
+
+        .formula-box .label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .card h4 {
+            margin-top: 0;
+        }
+
+        /* Crew position cards */
+        .crew-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .crew-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        .crew-card.captain { border-top: 3px solid #e8c547; }
+        .crew-card.engineer { border-top: 3px solid #f09040; }
+        .crew-card.pilot { border-top: 3px solid #47a8a8; }
+        .crew-card.sensor { border-top: 3px solid #9b7ae8; }
+        .crew-card.gunner { border-top: 3px solid #e85050; }
+
+        .crew-card .crew-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 0.5rem;
+            opacity: 0.9;
+        }
+
+        .crew-card.captain .crew-icon { fill: #e8c547; }
+        .crew-card.engineer .crew-icon { fill: #f09040; }
+        .crew-card.pilot .crew-icon { fill: #47a8a8; }
+        .crew-card.sensor .crew-icon { fill: #9b7ae8; }
+        .crew-card.gunner .crew-icon { fill: #e85050; }
+
+        .crew-card .crew-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .crew-card.captain .crew-title { color: #e8c547; }
+        .crew-card.engineer .crew-title { color: #f09040; }
+        .crew-card.pilot .crew-title { color: #47a8a8; }
+        .crew-card.sensor .crew-title { color: #9b7ae8; }
+        .crew-card.gunner .crew-title { color: #e85050; }
+
+        .crew-card .crew-skill {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Flowchart container */
+        .flowchart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .flowchart-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: var(--gold-primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Phase flow visualization */
+        .phase-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .phase-flow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            min-width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .phase-flow-item:hover {
+            transform: scale(1.05);
+        }
+
+        .phase-flow-item.p1 { border-color: #e8c547; }
+        .phase-flow-item.p2 { border-color: #f09040; }
+        .phase-flow-item.p3 { border-color: #47a8a8; }
+        .phase-flow-item.p4 { border-color: #9b7ae8; }
+        .phase-flow-item.p5 { border-color: #e85050; }
+
+        .phase-flow-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .phase-flow-item.p1 .phase-flow-num { background: #e8c547; color: var(--bg-primary); }
+        .phase-flow-item.p2 .phase-flow-num { background: #f09040; color: var(--bg-primary); }
+        .phase-flow-item.p3 .phase-flow-num { background: #47a8a8; color: var(--bg-primary); }
+        .phase-flow-item.p4 .phase-flow-num { background: #9b7ae8; color: var(--bg-primary); }
+        .phase-flow-item.p5 .phase-flow-num { background: #e85050; color: var(--bg-primary); }
+
+        .phase-flow-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .phase-flow-item.p1 .phase-flow-label { color: #e8c547; }
+        .phase-flow-item.p2 .phase-flow-label { color: #f09040; }
+        .phase-flow-item.p3 .phase-flow-label { color: #47a8a8; }
+        .phase-flow-item.p4 .phase-flow-label { color: #9b7ae8; }
+        .phase-flow-item.p5 .phase-flow-label { color: #e85050; }
+
+        .phase-flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+        }
+
+        /* Lists */
+        ul {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+        }
+
+        li {
+            margin: 0.3rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        li strong {
+            color: var(--text-primary);
+        }
+
+        /* Shimmer line */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--gold-primary), var(--accent-cyan), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 4s infinite;
+            margin: 2rem 0;
+        }
+
+        /* Range indicator */
+        .range-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .range-segment {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .range-segment.contact { background: rgba(232, 80, 80, 0.2); color: #e85050; }
+        .range-segment.short { background: rgba(240, 144, 64, 0.2); color: #f09040; }
+        .range-segment.medium { background: rgba(232, 197, 71, 0.2); color: #e8c547; }
+        .range-segment.long { background: rgba(71, 168, 168, 0.2); color: #47a8a8; }
+        .range-segment.extreme { background: rgba(155, 122, 232, 0.2); color: #9b7ae8; }
+
+        .range-cu {
+            font-size: 0.65rem;
+            opacity: 0.7;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .stars, body::before {
+                display: none;
+            }
+
+            nav {
+                display: none;
+            }
+
+            section {
+                break-inside: avoid;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+
+            section::before {
+                background: #333;
+            }
+
+            h1, h2, .gold-primary {
+                color: #333 !important;
+            }
+
+            .info-box {
+                border: 1px solid #999;
+                background: #f5f5f5;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            .flowchart-container {
+                background: #f9f9f9;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6rem;
+                letter-spacing: 0.12em;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 1.25rem;
+            }
+
+            nav ul {
+                gap: 0.25rem;
+            }
+
+            nav a {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .phase-flow {
+                flex-direction: column;
+            }
+
+            .phase-flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <div class="container">
+        <header>
+            <div class="header-icon">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Spaceship silhouette -->
+                    <ellipse cx="50" cy="50" rx="45" ry="20" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+                    <ellipse cx="50" cy="50" rx="35" ry="15" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <path d="M50 15 L60 40 L50 35 L40 40 Z" fill="currentColor"/>
+                    <path d="M50 85 L60 60 L50 65 L40 60 Z" fill="currentColor"/>
+                    <path d="M15 50 L40 55 L35 50 L40 45 Z" fill="currentColor"/>
+                    <path d="M85 50 L60 55 L65 50 L60 45 Z" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="6" fill="currentColor"/>
+                    <circle cx="50" cy="50" r="3" fill="#080b10"/>
+                    <!-- Orbit rings -->
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 4" opacity="0.3"/>
+                </svg>
+            </div>
+            <h1>Space Combat</h1>
+            <p class="subtitle">Coriolis - The Third Horizon</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#crew">Crew Positions</a></li>
+                <li><a href="#range">Range & Sensors</a></li>
+                <li><a href="#initiative">Initiative</a></li>
+                <li><a href="#phases">Turn Phases</a></li>
+                <li><a href="#energy">Energy Points</a></li>
+                <li><a href="#actions">Phase Actions</a></li>
+                <li><a href="#damage">Ship Damage</a></li>
+                <li><a href="#critical">Critical Damage</a></li>
+            </ul>
+        </nav>
+
+        <!-- CREW POSITIONS SECTION -->
+        <section id="crew">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                Crew Positions
+            </h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Each crew position has a dedicated phase in combat. Assign roles before battle begins.</p>
+
+            <div class="grid-5">
+                <div class="crew-card captain">
+                    <svg class="crew-icon" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                    <div class="crew-title">Captain</div>
+                    <div class="crew-skill">COMMAND</div>
+                </div>
+                <div class="crew-card engineer">
+                    <svg class="crew-icon" viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+                    <div class="crew-title">Engineer</div>
+                    <div class="crew-skill">TECHNOLOGY</div>
+                </div>
+                <div class="crew-card pilot">
+                    <svg class="crew-icon" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+                    <div class="crew-title">Pilot</div>
+                    <div class="crew-skill">PILOT</div>
+                </div>
+                <div class="crew-card sensor">
+                    <svg class="crew-icon" viewBox="0 0 24 24"><path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.26-.03.55-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
+                    <div class="crew-title">Sensor Op</div>
+                    <div class="crew-skill">DATA DJINN</div>
+                </div>
+                <div class="crew-card gunner">
+                    <svg class="crew-icon" viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                    <div class="crew-title">Gunner</div>
+                    <div class="crew-skill">RANGED COMBAT</div>
+                </div>
+            </div>
+
+            <h3>Small Crew Rules</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Crew Size</th>
+                            <th>Ship Class</th>
+                            <th>Combined Roles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">4 Crew</td>
+                            <td>Class II</td>
+                            <td><span class="crew-pilot">Pilot</span> + <span class="crew-captain">Captain</span> (no order bonuses)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">3 Crew</td>
+                            <td>Class II</td>
+                            <td><span class="crew-engineer">Engineer</span> + <span class="crew-sensor">Sensor Op</span> (2 actions/turn)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">2 Crew</td>
+                            <td>Class I-II</td>
+                            <td><span class="crew-pilot">Pilot</span> + <span class="crew-gunner">Gunner</span> (2 actions/turn)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">1 Crew</td>
+                            <td>Class I</td>
+                            <td><span class="crew-pilot">Pilot</span> covers all positions (4 actions/turn)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box warning">
+                <strong>Lost Crew Penalty:</strong> If crew is lost (not designed for small crew), each extra action gives <strong>-2 to ALL actions</strong> that turn.
+            </div>
+        </section>
+
+        <!-- RANGE & SENSORS SECTION -->
+        <section id="range">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                Range & Sensors
+            </h2>
+
+            <h3>Combat Range (in Combat Units - CU)</h3>
+            <div class="range-indicator">
+                <div class="range-segment contact">
+                    Contact
+                    <span class="range-cu">0 CU</span>
+                </div>
+                <div class="range-segment short">
+                    Short
+                    <span class="range-cu">1 CU</span>
+                </div>
+                <div class="range-segment medium">
+                    Medium
+                    <span class="range-cu">2 CU</span>
+                </div>
+                <div class="range-segment long">
+                    Long
+                    <span class="range-cu">up to 4 CU</span>
+                </div>
+                <div class="range-segment extreme">
+                    Extreme
+                    <span class="range-cu">up to 8 CU</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h4>Range Details</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Range</th>
+                                    <th>CU</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Contact</td>
+                                    <td>0</td>
+                                    <td>Same segment; ramming/boarding possible</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Short</td>
+                                    <td>1</td>
+                                    <td>Visual contact limit</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Medium</td>
+                                    <td>2</td>
+                                    <td>Passive sensor limit</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Long</td>
+                                    <td>up to 4</td>
+                                    <td>Active sensor limit</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Extreme</td>
+                                    <td>up to 8</td>
+                                    <td>Extreme sensor limit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <h4>Sensor Modes</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Range</th>
+                                    <th>Signature</th>
+                                    <th>EP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Passive</td>
+                                    <td>Medium (2 CU)</td>
+                                    <td class="modifier-neutral">+0</td>
+                                    <td><span class="ep-cost free">0 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Active</td>
+                                    <td>Long (4 CU)</td>
+                                    <td class="modifier-negative">+2</td>
+                                    <td><span class="ep-cost">1 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Extreme</td>
+                                    <td>Extreme (8 CU)</td>
+                                    <td class="modifier-negative">+2</td>
+                                    <td><span class="ep-cost">1 EP</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <h3>Detection (DATA DJINN)</h3>
+            <div class="grid-2">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Circumstance</th>
+                                <th>Modifier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Contact Range</td><td class="modifier-positive">+4</td></tr>
+                            <tr><td>Short Range</td><td class="modifier-positive">+2</td></tr>
+                            <tr><td>Medium Range</td><td class="modifier-neutral">0</td></tr>
+                            <tr><td>Long Range</td><td class="modifier-negative">-2</td></tr>
+                            <tr><td>Extreme Range</td><td class="modifier-negative">-4</td></tr>
+                            <tr><td>No Radio Silence</td><td class="modifier-positive">+2</td></tr>
+                            <tr><td>Reactor Shut Down</td><td class="modifier-negative">-3</td></tr>
+                            <tr><td>Weapons Fire</td><td class="highlight">Auto-Detect</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h4>Detection Success</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sixes</th>
+                                    <th>Information Gained</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">1-2</td>
+                                    <td>Distance in CU, current course</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">3+</td>
+                                    <td>Distance, class, course, weapons</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="info-box cyan" style="margin-top: 1rem;">
+                        <strong>Transponder On:</strong> Ships with active transponders are automatically detected when entering sensor range.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INITIATIVE SECTION -->
+        <section id="initiative">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                Initiative
+            </h2>
+
+            <div class="formula-box">
+                <div class="label">Initiative Roll</div>
+                <strong>Captains</strong> roll <strong style="color: var(--crew-captain);">COMMAND</strong> - highest single die = ship's initiative for the battle
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h4 style="margin-top: 0;">Determining Initiative</h4>
+                    <ol style="margin-left: 1.25rem;">
+                        <li>Each captain rolls <strong>COMMAND</strong></li>
+                        <li>Highest single die wins initiative</li>
+                        <li>Ties: most dice showing highest number</li>
+                        <li>Still tied: highest COMMAND skill level</li>
+                        <li>Still tied: chance decides</li>
+                    </ol>
+                </div>
+
+                <div class="card">
+                    <h4 style="margin-top: 0;">Surprise Attack</h4>
+                    <p style="font-size: 0.9rem;">If you attack an undetected enemy:</p>
+                    <ul>
+                        <li>You get a <strong>free turn</strong> (only you act)</li>
+                        <li>After first attack, you're auto-detected</li>
+                        <li>Then roll initiative normally</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box gold">
+                <strong>One turn of space combat = several minutes</strong> (much longer than ground combat)
+            </div>
+        </section>
+
+        <!-- TURN PHASES SECTION -->
+        <section id="phases">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                Turn Phases
+            </h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Each turn has 5 phases. Within each phase, ships act in initiative order.</p>
+
+            <div class="phase-flow">
+                <div class="phase-flow-item p1">
+                    <div class="phase-flow-num">1</div>
+                    <div class="phase-flow-label">Order</div>
+                </div>
+                <div class="phase-flow-arrow">→</div>
+                <div class="phase-flow-item p2">
+                    <div class="phase-flow-num">2</div>
+                    <div class="phase-flow-label">Engineer</div>
+                </div>
+                <div class="phase-flow-arrow">→</div>
+                <div class="phase-flow-item p3">
+                    <div class="phase-flow-num">3</div>
+                    <div class="phase-flow-label">Pilot</div>
+                </div>
+                <div class="phase-flow-arrow">→</div>
+                <div class="phase-flow-item p4">
+                    <div class="phase-flow-num">4</div>
+                    <div class="phase-flow-label">Sensor</div>
+                </div>
+                <div class="phase-flow-arrow">→</div>
+                <div class="phase-flow-item p5">
+                    <div class="phase-flow-num">5</div>
+                    <div class="phase-flow-label">Attack</div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Position</th>
+                            <th>Skill</th>
+                            <th>Key Actions</th>
+                            <th>Revealed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="phase-badge phase-1"><span class="phase-num">1</span> Order</span></td>
+                            <td class="crew-captain">Captain</td>
+                            <td>COMMAND</td>
+                            <td>Choose order secretly, then reveal & roll</td>
+                            <td>Simultaneous</td>
+                        </tr>
+                        <tr>
+                            <td><span class="phase-badge phase-2"><span class="phase-num">2</span> Engineer</span></td>
+                            <td class="crew-engineer">Engineer</td>
+                            <td>TECHNOLOGY</td>
+                            <td>Distribute EP, repairs, overload reactor</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td><span class="phase-badge phase-3"><span class="phase-num">3</span> Pilot</span></td>
+                            <td class="crew-pilot">Pilot</td>
+                            <td>PILOT</td>
+                            <td>Move, evade, ram, board</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td><span class="phase-badge phase-4"><span class="phase-num">4</span> Sensor</span></td>
+                            <td class="crew-sensor">Sensor Op</td>
+                            <td>DATA DJINN</td>
+                            <td>Target lock, break lock, data attacks</td>
+                            <td>Open</td>
+                        </tr>
+                        <tr>
+                            <td><span class="phase-badge phase-5"><span class="phase-num">5</span> Attack</span></td>
+                            <td class="crew-gunner">Gunner</td>
+                            <td>RANGED COMBAT</td>
+                            <td>Fire weapons, launch torpedoes/mines</td>
+                            <td>Open</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ENERGY POINTS SECTION -->
+        <section id="energy">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+                Energy Points (EP)
+            </h2>
+
+            <div class="formula-box">
+                <div class="label">EP Pool</div>
+                Ship's EP = Reactor output. <strong>Refreshed each turn.</strong> Cannot be saved between turns.
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>EP Costs</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>EP Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Captain's Orders</td>
+                                    <td><span class="ep-cost free">0 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Overload Reactor</td>
+                                    <td><span class="ep-cost free">0 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pilot Actions</td>
+                                    <td><span class="ep-cost variable">= Ship Class</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Fire Torpedo</td>
+                                    <td><span class="ep-cost free">0 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Launch Mine</td>
+                                    <td><span class="ep-cost free">0 EP</span></td>
+                                </tr>
+                                <tr>
+                                    <td>All Other Actions</td>
+                                    <td><span class="ep-cost">1 EP</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Overloading</h3>
+                    <div class="card">
+                        <h4 style="margin-top: 0;">Extra EP = Bonus</h4>
+                        <p style="font-size: 0.9rem;">Each additional EP spent above base cost gives <strong class="modifier-positive">+1</strong> to the roll.</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">Example: Spending 3 extra EP = +3 modifier</p>
+                    </div>
+
+                    <div class="info-box warning" style="margin-top: 1rem;">
+                        <strong>Systems Damage:</strong> EP damage first eliminates unspent EP, then destroys already-used EP.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHASE ACTIONS SECTION -->
+        <section id="actions">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                Phase Actions
+            </h2>
+
+            <!-- Phase 1: Order -->
+            <h3><span class="phase-badge phase-1"><span class="phase-num">1</span> Order Phase</span> - Captain (COMMAND)</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Choose order secretly, reveal simultaneously, then roll COMMAND. Success = bonus equal to sixes rolled.</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Bonus Applies To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">REPAIR!</td>
+                            <td>Ship repairs (Phase 2)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">EVADE!</td>
+                            <td>Evasive maneuvers (Phase 3) + Breaking target locks (Phase 4)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">RETREAT!</td>
+                            <td>Movement away from enemy (Phase 3)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">ATTACK!</td>
+                            <td>Movement toward enemy (Phase 3) + All attacks (Phase 5)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <!-- Phase 2: Engineer -->
+            <h3><span class="phase-badge phase-2"><span class="phase-num">2</span> Engineer Phase</span> - Engineer (TECHNOLOGY)</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">First distribute EP (no roll), then perform one action.</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>EP</th>
+                            <th>Effect</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Overload Reactor</td>
+                            <td><span class="ep-cost free">0</span></td>
+                            <td>Gain extra EP = sixes rolled</td>
+                            <td class="modifier-negative">Ship takes 1 HP damage per extra EP (1 HP on fail)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Repair Hull</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Restore HP = sixes rolled</td>
+                            <td>Requires spare part; -2 without service station</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Repair Systems</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Restore EP = sixes rolled (next turn)</td>
+                            <td>Requires spare part; -2 without service station</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Repair Critical</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Fix one critical damage</td>
+                            <td>Requires spare part; -2 without service station</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Repair Module</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Restore disabled module</td>
+                            <td>Requires spare part; -2 without service station</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Open Airlock</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Open airlock to docked enemy ship</td>
+                            <td>Requires successful boarding (previous turn)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <!-- Phase 3: Pilot -->
+            <h3><span class="phase-badge phase-3"><span class="phase-num">3</span> Pilot Phase</span> - Pilot (PILOT)</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Can perform multiple actions if enough EP. Each extra action after first gives <strong class="modifier-negative">-2 to ALL actions</strong>.</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>EP</th>
+                            <th>Effect</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Position</td>
+                            <td><span class="ep-cost variable">Class</span></td>
+                            <td>Raise initiative = sixes rolled</td>
+                            <td>Takes effect next turn</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Advance/Retreat</td>
+                            <td><span class="ep-cost variable">Class</span></td>
+                            <td>Move 1 segment (+1 per extra six)</td>
+                            <td>Modified by Maneuverability</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Evasive Maneuver</td>
+                            <td><span class="ep-cost variable">Class</span></td>
+                            <td>Penalty to attacks vs ship = sixes</td>
+                            <td>Lasts until end of turn</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Ramming</td>
+                            <td><span class="ep-cost variable">Class</span></td>
+                            <td>Opposed PILOT; both ships take damage</td>
+                            <td>Must be at Contact range (0 CU)</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Boarding</td>
+                            <td><span class="ep-cost variable">Class</span></td>
+                            <td>Opposed PILOT at -2; dock with enemy</td>
+                            <td>Requires docking station; prevents retreat</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <!-- Phase 4: Sensor -->
+            <h3><span class="phase-badge phase-4"><span class="phase-num">4</span> Sensor Phase</span> - Sensor Operator (DATA DJINN)</h3>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>EP</th>
+                            <th>Effect</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Target Lock</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Lock strength = sixes rolled</td>
+                            <td>Modified by target Signature; only 1 lock at a time</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Break Lock</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Remove enemy lock on your ship</td>
+                            <td>Modified negatively by lock strength</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Pulse Attack</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Deal EP damage (not HP)</td>
+                            <td>Modified by target Signature</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Meme Attack</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Data warfare against enemy</td>
+                            <td>Modified by target Signature</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Disappear</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Drop from enemy sensors</td>
+                            <td>Requires Stealth Tech; modified by lock strength</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box gold">
+                <strong>Target Lock Required:</strong> Torpedoes require a lock. Other weapons get <strong class="modifier-negative">-2</strong> without a lock.
+            </div>
+
+            <div class="shimmer-line"></div>
+
+            <!-- Phase 5: Attack -->
+            <h3><span class="phase-badge phase-5"><span class="phase-num">5</span> Attack Phase</span> - Gunner (RANGED COMBAT)</h3>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>EP</th>
+                            <th>Effect</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">Fire Weapon</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Attack with weapon system</td>
+                            <td>+Weapon bonus +Lock strength; -2 without lock</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Launch Torpedo</td>
+                            <td><span class="ep-cost free">0</span></td>
+                            <td>Fire torpedo (moves 2 CU/turn)</td>
+                            <td><strong>Requires target lock</strong>; can be shot down</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Launch Mine</td>
+                            <td><span class="ep-cost free">0</span></td>
+                            <td>Place mine in current segment</td>
+                            <td>Triggers when other ships enter; no lock needed</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">Defensive Fire</td>
+                            <td><span class="ep-cost">1</span></td>
+                            <td>Destroy incoming torpedo</td>
+                            <td>Requires autocannon/countermeasures; replaces offensive fire</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4>Attack Bonus Effects (Extra Sixes)</h4>
+            <div class="grid-2">
+                <div class="card">
+                    <h4 style="margin-top: 0;">More Damage</h4>
+                    <p style="font-size: 0.85rem;">+1 damage per six spent <em>(repeatable)</em></p>
+                </div>
+                <div class="card">
+                    <h4 style="margin-top: 0;">Critical Hit</h4>
+                    <p style="font-size: 0.85rem;">Costs sixes = weapon's CRIT rating; roll 2D6 on critical table</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHIP DAMAGE SECTION -->
+        <section id="damage">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Ship Damage
+            </h2>
+
+            <div class="grid-2">
+                <div>
+                    <h3>Damage Types</h3>
+                    <div class="card">
+                        <h4 style="margin-top: 0; color: var(--accent-red);">Hull Damage (HP)</h4>
+                        <p style="font-size: 0.85rem;">Physical damage to ship structure. At 0 HP: reactor stops, weapons offline, explosive decompression.</p>
+                    </div>
+                    <div class="card" style="margin-top: 1rem;">
+                        <h4 style="margin-top: 0; color: var(--accent-cyan);">Systems Damage (EP)</h4>
+                        <p style="font-size: 0.85rem;">Damage to power systems. At 0 EP: reactor stops, ship dead in space (life support continues).</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Armor</h3>
+                    <p style="font-size: 0.9rem;">When hit, roll dice = Armor Rating. Each <strong class="highlight">6</strong> reduces damage by 1.</p>
+
+                    <div class="info-box success" style="margin-top: 1rem;">
+                        <strong>Full Block:</strong> If armor reduces damage to 0, critical damage is also negated.
+                    </div>
+
+                    <h4>Ramming Damage</h4>
+                    <p style="font-size: 0.85rem;">Both ships take damage = enemy ship's class. Defender takes additional HP = attacker's extra sixes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRITICAL DAMAGE SECTION -->
+        <section id="critical">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                Critical Ship Damage
+            </h2>
+
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Roll <strong>2D6</strong> when critical hit is scored. Extra sixes can be spent to reroll for worse result.</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>2D6</th>
+                            <th>Critical Damage</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="highlight">2</td>
+                            <td>Limited Decompression</td>
+                            <td>Bridge/module breached; roll each turn - on 6, full decompression</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">3</td>
+                            <td>Structural Damage</td>
+                            <td>Armor -2, Signature +2 until repaired</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">4</td>
+                            <td>Damaged Sensors</td>
+                            <td>Sensor operator -2 to all rolls until repaired</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">5</td>
+                            <td>Damaged Thrusters</td>
+                            <td>Maneuverability -2 until repaired</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">6</td>
+                            <td>Damaged Power Coupling</td>
+                            <td>EP pool -2 until repaired</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">7</td>
+                            <td>Destroyed Module</td>
+                            <td>Random module disabled; occupants at risk</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">8</td>
+                            <td>Disabled Weapon</td>
+                            <td>Random weapon system stops working</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">9</td>
+                            <td>Disabled Graviton Projector</td>
+                            <td>No propulsion; pilot cannot act</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">10</td>
+                            <td>Destroyed Bridge</td>
+                            <td>Captain, pilot, sensor op cannot act; decompression</td>
+                        </tr>
+                        <tr>
+                            <td class="highlight">11</td>
+                            <td>Chain Reaction</td>
+                            <td class="modifier-negative">Roll twice on this table</td>
+                        </tr>
+                        <tr style="background: rgba(155, 74, 74, 0.1);">
+                            <td class="highlight" style="color: var(--accent-red);">12</td>
+                            <td style="color: var(--accent-red); font-weight: 600;">REACTOR DETONATION</td>
+                            <td class="modifier-negative">Ship destroyed; all crew at risk + decompression</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box warning">
+                <strong>Cumulative Effects:</strong> If same critical damage occurs again, modifiers stack.
+            </div>
+        </section>
+
+        <!-- FLOWCHARTS SECTION -->
+        <section id="flowcharts">
+            <h2>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z"/></svg>
+                Combat Flowcharts
+            </h2>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Space Combat Turn Structure</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[START OF TURN] --> B[Phase 1: ORDER<br/>Captains choose secretly]
+                        B --> C[Reveal orders simultaneously]
+                        C --> D[Roll COMMAND for bonuses]
+                        D --> E[Phase 2: ENGINEER<br/>Distribute EP]
+                        E --> F[Engineer actions<br/>Repairs, Overload]
+                        F --> G[Phase 3: PILOT<br/>Movement & Maneuvers]
+                        G --> H[Phase 4: SENSOR<br/>Locks & Data Attacks]
+                        H --> I[Phase 5: ATTACK<br/>Weapons Fire]
+                        I --> J[END OF TURN]
+                        J --> K{Battle Over?}
+                        K -->|No| A
+                        K -->|Yes| L[Combat Ends]
+
+                        style A fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style B fill:#151a22,stroke:#e8c547,color:#e8e6e3
+                        style C fill:#151a22,stroke:#e8c547,color:#e8e6e3
+                        style D fill:#151a22,stroke:#e8c547,color:#e8e6e3
+                        style E fill:#151a22,stroke:#f09040,color:#e8e6e3
+                        style F fill:#151a22,stroke:#f09040,color:#e8e6e3
+                        style G fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style H fill:#151a22,stroke:#9b7ae8,color:#e8e6e3
+                        style I fill:#151a22,stroke:#e85050,color:#e8e6e3
+                        style J fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style K fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style L fill:#c9a227,stroke:#8b7119,color:#080b10
+                </div>
+            </div>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Attack Resolution</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[Gunner Fires Weapon] --> B{Target Lock?}
+                        B -->|Yes| C[Add lock strength<br/>to roll]
+                        B -->|No| D[Apply -2 penalty]
+                        C --> E[Roll RANGED COMBAT<br/>+ Weapon Bonus<br/>+ Order Bonus<br/>- Evasive Penalty]
+                        D --> E
+                        E --> F{Any 6s?}
+                        F -->|No| G[Attack Misses]
+                        F -->|Yes| H[Deal Weapon Damage]
+                        H --> I[Target Rolls Armor]
+                        I --> J{Damage<br/>Reduced to 0?}
+                        J -->|Yes| K[Attack Negated<br/>No Critical]
+                        J -->|No| L[Apply HP/EP Damage]
+                        L --> M{Extra 6s<br/>for Critical?}
+                        M -->|Yes| N[Roll 2D6<br/>Critical Damage]
+                        M -->|No| O[Attack Complete]
+                        N --> O
+                        G --> O
+                        K --> O
+
+                        style A fill:#151a22,stroke:#e85050,color:#e8e6e3
+                        style B fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style C fill:#151a22,stroke:#4a9b6b,color:#e8e6e3
+                        style D fill:#151a22,stroke:#9b4a4a,color:#e8e6e3
+                        style E fill:#151a22,stroke:#e85050,color:#e8e6e3
+                        style F fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style G fill:#151a22,stroke:#9b4a4a,color:#e8e6e3
+                        style H fill:#151a22,stroke:#4a9b6b,color:#e8e6e3
+                        style I fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style J fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style K fill:#151a22,stroke:#4a9b6b,color:#e8e6e3
+                        style L fill:#151a22,stroke:#9b4a4a,color:#e8e6e3
+                        style M fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style N fill:#9b4a4a,stroke:#7a3939,color:#e8e6e3
+                        style O fill:#c9a227,stroke:#8b7119,color:#080b10
+                </div>
+            </div>
+
+            <div class="flowchart-container">
+                <div class="flowchart-title">Torpedo Attack</div>
+                <div class="mermaid">
+                    flowchart TD
+                        A[Launch Torpedo<br/>Requires Lock] --> B[Torpedo moves<br/>2 CU per turn]
+                        B --> C{Reached<br/>Target?}
+                        C -->|No| D[Continue next turn]
+                        D --> B
+                        C -->|Yes| E{Defender uses<br/>Defensive Fire?}
+                        E -->|Yes| F[Roll RANGED COMBAT<br/>Modified by lock strength]
+                        F --> G{Success?}
+                        G -->|Yes| H[Torpedo Destroyed]
+                        G -->|No| I[Torpedo Hits!]
+                        E -->|No| I
+                        I --> J[Roll Attack<br/>Deal Damage]
+                        J --> K[Module occupants<br/>roll 9 dice for injury]
+
+                        style A fill:#151a22,stroke:#e85050,color:#e8e6e3
+                        style B fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style C fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style D fill:#151a22,stroke:#47a8a8,color:#e8e6e3
+                        style E fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style F fill:#151a22,stroke:#4a9b6b,color:#e8e6e3
+                        style G fill:#151a22,stroke:#c9a227,color:#e8e6e3
+                        style H fill:#151a22,stroke:#4a9b6b,color:#e8e6e3
+                        style I fill:#9b4a4a,stroke:#7a3939,color:#e8e6e3
+                        style J fill:#151a22,stroke:#e85050,color:#e8e6e3
+                        style K fill:#9b4a4a,stroke:#7a3939,color:#e8e6e3
+                </div>
+            </div>
+        </section>
+
+        <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem;">
+            <div class="shimmer-line" style="margin-bottom: 2rem;"></div>
+            <p><em>Coriolis: The Third Horizon</em> by Free League Publishing</p>
+            <p style="margin-top: 0.5rem;">Space Combat Reference Sheet</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Mermaid with dark theme
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#0f1318',
+                primaryColor: '#151a22',
+                primaryTextColor: '#e8e6e3',
+                primaryBorderColor: '#47a8a8',
+                lineColor: '#47a8a8',
+                secondaryColor: '#151a22',
+                tertiaryColor: '#151a22',
+                fontFamily: 'Raleway, sans-serif',
+                fontSize: '13px'
+            },
+            flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 12,
+                nodeSpacing: 40,
+                rankSpacing: 40
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in nav
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.color = '';
+                link.style.background = '';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.color = '#47a8a8';
+                    link.style.background = 'rgba(71, 168, 168, 0.1)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
